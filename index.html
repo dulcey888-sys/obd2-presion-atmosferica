@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OBD2 · Presión barométrica</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="container">
+  <header><span class="eyebrow">DIAGNÓSTICO OBD2</span><h1>Verificación de presión atmosférica</h1><p>Compare la presión barométrica de la ECU con la presión de superficie de su ubicación.</p></header>
+
+  <section class="notice"><strong>Seguridad:</strong> use la herramienta con el vehículo estacionado. Esta versión solo lee datos; no escribe ni recalibra la ECU.</section>
+  <div class="grid top-grid">
+    <section class="card"><h2>1. Adaptador OBD2</h2><div class="connection"><i id="connectionDot"></i><span id="connectionStatus">Sin conexión</span></div>
+      <div class="actions"><button id="bleConnect">Conectar BLE</button><button id="serialConnect" class="secondary">Conectar puerto serie</button><button id="disconnect" class="danger" disabled>Desconectar</button></div>
+      <p id="compatibility" class="compatibility"></p>
+      <p class="hint">BLE funciona con adaptadores que exponen un servicio GATT/UART. Muchos ELM327 Bluetooth clásicos solo funcionan como puerto serie y pueden requerir Web Serial (Chrome/Edge).</p>
+      <details><summary>Registro del adaptador</summary><pre id="log" aria-live="polite">Esperando conexión…</pre></details>
+    </section>
+    <section class="card"><h2>2. Condiciones de referencia</h2><p id="locationText">Ubicación no obtenida.</p><p id="weatherText">Sin datos meteorológicos.</p>
+      <div class="actions"><button id="locate">Usar mi ubicación</button><button id="demo" class="secondary">Cargar ejemplo</button></div>
+      <p class="hint">Fuente: Open-Meteo. Se usa <em>surface_pressure</em> (presión en superficie), no la presión reducida a nivel del mar.</p>
+    </section>
+  </div>
+
+  <section class="card readings"><div><span>ECU · PID 01 33</span><strong id="vehicleValue">—</strong><small id="vehicleUnits">—</small><small id="mapValue">MAP: —</small></div><div><span>Estación / ubicación</span><strong id="weatherValue">—</strong><small id="weatherTime">—</small></div><div><span>Diferencia absoluta</span><strong id="differenceValue">—</strong><small id="percentValue">—</small></div></section>
+
+  <section class="card"><div class="section-heading"><div><h2>3. Comparación y diagnóstico</h2><p>Margen configurable para evitar falsos positivos por precisión, clima y actualización.</p></div><label class="tolerance">Tolerancia <input id="tolerance" type="number" min="0.1" max="20" step="0.1" value="2"> kPa</label></div>
+    <div id="diagnosis" class="diagnosis neutral"><h3>Esperando dos mediciones equivalentes</h3><p>Conecte el adaptador y obtenga su ubicación, o cargue el ejemplo.</p></div>
+    <div class="actions"><button id="readObd" disabled>Leer presión de ECU</button><button id="compare" class="secondary">Actualizar diagnóstico</button></div>
+  </section>
+
+  <section class="card"><h2>Reaprendizaje y calibración</h2><p>El PID estándar 01 33 es de <strong>solo lectura</strong>. SAE J1979 no define una calibración universal del barómetro. Un procedimiento de reaprendizaje depende de marca, modelo, ECU y herramienta de diagnóstico OEM/bidireccional.</p><ul><li>Verifique boletines y el manual de servicio del vehículo.</li><li>Antes de sustituir piezas, inspeccione conectores, alimentación, masa y admisión.</li><li>Si se requiere calibración, use el procedimiento OEM con el motor detenido y condiciones ambientales estables.</li></ul></section>
+  <footer>Compatibilidad: Chrome/Edge en contexto seguro (HTTPS o localhost). Nunca use la pantalla mientras conduce.</footer>
+</main><script src="app.js"></script></body></html>
